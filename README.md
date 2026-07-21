@@ -45,6 +45,7 @@ An AI-powered mock interview platform built with React, Express, MongoDB, TypeSc
 4. Update the `.env` file with your actual values:
    - `MONGODB_URI`: Your MongoDB connection string
    - `MONGODB_DB`: The database name to use
+   - `MONGODB_DNS_SERVERS`: Optional comma-separated DNS resolvers for Atlas SRV lookups (for example, `1.1.1.1,8.8.8.8`)
    - `BACKEND_URL`: Express backend base URL, usually `http://localhost:5000`
    - `JWT_SECRET`: A secret key for JWT tokens
    - `GOOGLE_GENERATIVE_AI_API_KEY`: Your Google Gemini API key

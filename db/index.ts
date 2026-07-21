@@ -1,3 +1,4 @@
+import dns from 'node:dns';
 import { Collection, Db, MongoClient } from 'mongodb';
 import {
   COLLECTIONS,
@@ -20,6 +21,7 @@ type MongoCollections = {
 
 const MONGODB_URI = process.env.MONGODB_URI;
 const MONGODB_DB = process.env.MONGODB_DB;
+const MONGODB_DNS_SERVERS = process.env.MONGODB_DNS_SERVERS;
 
 type GlobalMongo = typeof globalThis & {
   __mongoClientPromise?: Promise<MongoClient>;
@@ -28,6 +30,16 @@ type GlobalMongo = typeof globalThis & {
 };
 
 const globalForMongo = globalThis as GlobalMongo;
+
+function configureMongoDns() {
+  const servers = MONGODB_DNS_SERVERS?.split(',')
+    .map(server => server.trim())
+    .filter(Boolean);
+
+  if (servers?.length) {
+    dns.setServers(servers);
+  }
+}
 
 function getDatabaseName() {
   if (MONGODB_DB) {
@@ -48,6 +60,7 @@ async function getClient() {
   }
 
   if (!globalForMongo.__mongoClientPromise) {
+    configureMongoDns();
     const client = new MongoClient(MONGODB_URI);
     globalForMongo.__mongoClientPromise = client.connect();
   }
